@@ -1,0 +1,27 @@
+# --- Données / calcul scientifique ---
+numpy>=1.26
+pandas>=2.1
+scikit-learn>=1.3
+
+# --- Modèles tabulaires ---
+pytabkit>=1.0
+catboost>=1.2
+
+# --- LSTM + xNIDS ---
+torch>=2.0
+asgl>=2.0
+
+# --- Explicabilité ---
+shap>=0.45
+
+# --- RAG / embeddings sémantiques ---
+sentence-transformers>=2.6
+
+# --- Agents LLM (Ollama) ---
+ollama>=0.2
+
+# --- Sauvegarde de modèles ---
+joblib>=1.3
+
+# --- Visualisation (optionnel, utilisé dans les notebooks d'exploration) ---
+matplotlib>=3.8

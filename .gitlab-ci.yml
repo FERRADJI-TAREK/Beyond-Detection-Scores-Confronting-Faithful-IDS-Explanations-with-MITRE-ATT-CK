@@ -1,0 +1,14 @@
+stages:
+  - lint
+
+lint:
+  stage: lint
+  image: python:3.11-slim
+  script:
+    - pip install --quiet flake8
+    - python -m py_compile $(find src scripts -name "*.py")
+    - flake8 src scripts --max-line-length=120 --extend-ignore=E203,W503
+  allow_failure: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

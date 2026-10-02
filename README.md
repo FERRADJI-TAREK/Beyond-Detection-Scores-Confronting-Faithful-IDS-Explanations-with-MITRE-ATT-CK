@@ -1,0 +1,243 @@
+
+# IDS Neuro-Symbolic — RealMLP / CatBoost / LSTM + SHAP + LLM Agents (MITRE ATT&CK)
+
+Network intrusion detection pipeline combining tabular and sequential
+models (**RealMLP**, **CatBoost**, **LSTM**), an explainability layer
+(**SHAP** — PermutationExplainer or native TreeSHAP depending on the
+model, **xNIDS** for the LSTM), and a **multi-agent LLM** architecture
+(behavioral synthesis → dense RAG over the MITRE ATT&CK knowledge base →
+final ranking), applied to two ATT&CK-labeled network datasets:
+**UWF-Zeek** and **CasinoLimit** (see section 6 for the per-model/dataset
+breakdown).
+
+---
+
+## 1. Pipeline architecture (reference: RealMLP on Zeek)
+
+The diagram below details the reference pipeline (RealMLP + SHAP on
+Zeek). The other model/dataset combinations (CatBoost, LSTM,
+CasinoLimit) follow the same general architecture (model → explainability
+→ Agent 1 → dense RAG → Agent 2) with steps [1]-[4] adapted to the
+dataset/model — see section 6 for the details and the corresponding
+scripts.
+
+```
+Raw Zeek logs (part-*.csv)
+        │
+        ▼
+[1] Chronological sorting ───────────────► *_sorted.csv
+        │
+        ▼
+[2] Behavioral feature engineering (sliding windows,
+    velocity, target/port uniqueness, failure rate…)
+        │
+        ▼
+[3] Filtering + merging (BENIGN / T1046 / T1595/T1587) ─► dataset_focus_*.csv
+        │
+        ▼
+[4] RealMLP training (pytabkit) ────────────► realmlp_*.joblib
+        │
+        ▼
+[5] SHAP (PermutationExplainer) + hybrid grouping
+    (business semantic families ↔ Pearson correlation)
+        │
+        ▼
+[6] Agent 1 (LLM) — behavioral synthesis (EVENT SUMMARY / BEHAVIOR DESCRIPTION)
+        │
+        ▼
+[7] Dense RAG — SentenceTransformer (all-MiniLM-L6-v2) over the MITRE ATT&CK knowledge base (Top-25)
+        │
+        ▼
+[8] Agent 2 (LLM) — final Top-5 ranking of candidate techniques
+```
+
+## CasinoLimit
+```
+final_dataset_14techniques_benign_behavioral.csv (provided, already enriched)
+        │
+        ▼
+[1] Test event selection (5 per technique, Baseline and
+    Behavioral handled separately on two disjoint samples)
+        │
+        ▼
+[2] Vectorization (Baseline: 7 Table I features, or Behavioral:
+    17 Table I+II features, read directly from the loaded model)
+        │
+        ▼
+[3] SHAP — PermutationExplainer (RealMLP) or native TreeSHAP
+    tree_path_dependent (CatBoost) + hybrid grouping
+        │
+        ▼
+[4] Agent 1 (LLM) — behavioral synthesis (EVENT SUMMARY / BEHAVIOR DESCRIPTION)
+        │
+        ▼
+[5] Dense RAG — SentenceTransformer (all-MiniLM-L6-v2) over the dataset's
+    14 MITRE ATT&CK techniques (Top-25)
+        │
+        ▼
+[6] Agent 2 (LLM) — final Top-5 ranking of candidate techniques
+```
+
+An **adversarial validation** procedure measures, objectively, how much
+the LLM agents' reasoning depends on the reliability of the
+explainability signal, in two forms:
+- **random permutation** of the SHAP ranking, scores, and signs
+  (`--permute-shap`);
+- **constant fictitious SHAP/xNIDS table** (`--fake-shap-constant` /
+  `--fake-xnids-constant`) — the same fabricated explanation is injected
+  for every event, regardless of its real content, to measure whether
+  the agents blindly follow the explanation rather than the actually
+  observed raw data.
+
+## 2. Repository structure
+
+```
+.
+├── data/
+│   ├── raw/                # Raw Zeek exports (part-*.csv), chronologically sorted
+│   └── processed/          # Final enriched dataset (dataset_focus_t1595_t1046_t1587_benin.csv)
+├── models/                 # Trained Zeek models: RealMLP (.joblib, Baseline48 + Behavioral),
+│                           # CatBoost (.joblib, Baseline + Behavioral), LSTM (.pt)
+│                           # + models/casinolimit/ : RealMLP, CatBoost (Baseline+Behavioral), LSTM
+├── mitre/                  # MITRE ATT&CK knowledge base (JSON) — see mitre/README.md
+├── notebooks/              # Original exploration notebook (cleaned, outputs stripped)
+├── docs/
+│   └── RAPPORT_SCIENTIFIQUE.md
+├── scripts/                # Numbered entry points = pipeline execution order
+│   ├── 01_sort_raw_flows.py
+│   ├── 02_add_behavioral_features.py
+│   ├── 03_build_focus_dataset.py
+│   ├── 04_train_realmlp_model.py
+│   ├── 05_run_shap_llm_pipeline.py           # RealMLP + SHAP (Zeek)
+│   ├── 06_run_catboost_shap_llm_pipeline.py  # CatBoost + TreeSHAP (Zeek)
+│   ├── casinolimit/        # SHAP+Agents pipeline (RealMLP, CatBoost) on CasinoLimit
+│   └── lstm/                # LSTM + xNIDS + Agents pipeline (Zeek AND CasinoLimit)
+├── src/ids_pipeline/        # Reusable Python package
+│   ├── config.py             # Paths, constants, semantic families, expected features
+│   ├── utils.py
+│   ├── preprocessing/        # Steps [1] [2] [3]
+│   ├── modeling/             # Step [4] + inference vectorization
+│   ├── explainability/       # Step [5] (SHAP + grouping + permutation + fake tables)
+│   └── agents/               # Steps [6] [7] [8]
+├── results/                 # JSON outputs generated by runs (git-ignored)
+├── requirements.txt
+├── .gitignore
+└── .gitlab-ci.yml
+```
+
+## 3. Installation
+
+```bash
+git clone https://anonymous.4open.science/r/code-satml-DC25
+cd code-satml-DC25   # or the folder name obtained after cloning/extracting the zip
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
+pip install -e .            # installs the ids_pipeline package in development mode
+```
+
+A local or remote LLM compatible with [Ollama](https://ollama.com) must
+be reachable for the Agent 1 / Agent 2 steps (`ollama pull gpt-oss:120b-cloud`
+or any other model, configurable via the `IDS_LLM_MODEL` environment
+variable).
+
+### Data and models
+
+Large files (`data/raw`, `data/processed`, `models/*.joblib`,
+`models/*.pt`) **are not versioned in git** (see `.gitignore`) to keep
+the repository lightweight. They are provided separately (archive
+shared alongside this repository) and must be placed in the
+corresponding folders before running the pipeline. See
+[`data/README.md`](data/README.md) and
+[`models/README.md`](models/README.md).
+
+## 4. Usage
+
+Each script in `scripts/` corresponds to a numbered pipeline step and
+can be run independently:
+
+```bash
+python scripts/01_sort_raw_flows.py
+python scripts/02_add_behavioral_features.py
+python scripts/03_build_focus_dataset.py
+python scripts/04_train_realmlp_model.py
+
+# --- RealMLP + SHAP (Zeek) ---
+python scripts/05_run_shap_llm_pipeline.py                        # normal run (real SHAP)
+python scripts/05_run_shap_llm_pipeline.py --permute-shap         # adversarial validation (permuted SHAP)
+python scripts/05_run_shap_llm_pipeline.py --fake-shap-constant \
+       --fake-shap-variant behavioral                             # adversarial validation (constant fake SHAP)
+python scripts/05_run_shap_llm_pipeline.py --model models/realmlp_zeek_binaire_baseline48.joblib
+                                                                    # "Baseline" model (48 features) instead of "Behavioral" (default)
+
+# --- CatBoost + TreeSHAP (Zeek) ---
+python scripts/06_run_catboost_shap_llm_pipeline.py                # normal run, "Baseline" model (default)
+python scripts/06_run_catboost_shap_llm_pipeline.py --model models/catboost_zeek_behavioral.joblib
+                                                                    # "Behavioral" model (59 features)
+python scripts/06_run_catboost_shap_llm_pipeline.py --permute-shap --seed 42
+python scripts/06_run_catboost_shap_llm_pipeline.py --fake-shap-constant --fake-shap-variant baseline
+
+# --- LSTM + xNIDS (Zeek) ---
+python scripts/lstm/run_lstm_pipeline_zeek.py                        # normal run (real xNIDS)
+python scripts/lstm/run_lstm_pipeline_zeek.py --fake-xnids-constant  # adversarial validation (constant fake xNIDS)
+
+# --- LSTM + xNIDS (CasinoLimit) ---
+python scripts/lstm/run_lstm_pipeline_casinolimit.py                 # normal run (real xNIDS)
+python scripts/lstm/run_lstm_pipeline_casinolimit_adversarial.py     # adversarial validation (constant fake xNIDS)
+
+# --- CasinoLimit pipelines (RealMLP and CatBoost, Baseline+Behavioral, models included) ---
+python scripts/casinolimit/run_realmlp_pipeline.py
+python scripts/casinolimit/run_catboost_pipeline.py
+python scripts/casinolimit/run_realmlp_pipeline_adversarial.py       # adversarial validation (constant fake SHAP)
+python scripts/casinolimit/run_catboost_pipeline_adversarial.py      # adversarial validation (constant fake SHAP)
+```
+
+Options common to `05_run_shap_llm_pipeline.py` and
+`06_run_catboost_shap_llm_pipeline.py`:
+
+| Option                 | Description                                                 | Default                  |
+|------------------------|---------------------------------------------------------------|---------------------------|
+| `--permute-shap`       | Shuffles the SHAP ranking/scores/signs (adversarial test)     | disabled                 |
+| `--seed`               | Permutation seed                                              | 42                        |
+| `--fake-shap-constant` | Adversarial validation via a CONSTANT fictitious SHAP table (same explanation for every event — mutually exclusive with `--permute-shap`, same methodology as `scripts/casinolimit/run_*_pipeline_adversarial.py`) | disabled |
+| `--fake-shap-variant`  | With `--fake-shap-constant`: which fake table to use, `baseline` or `behavioral`, depending on the loaded model | `behavioral` |
+| `--n-per-technique`    | Number of events analyzed per technique                       | 5                         |
+| `--llm-model`          | Name of the Ollama model used for the agents                   | `gpt-oss:120b-cloud`      |
+| `--output`             | Output JSON report path                                        | `results/run_<ts>.json`   |
+
+For `scripts/lstm/run_lstm_pipeline_zeek.py`, the equivalent option is
+`--fake-xnids-constant` (no separate Baseline/Behavioral variant: the
+LSTM only consumes the Baseline representation, see
+[`scripts/lstm/README.md`](scripts/lstm/README.md)).
+
+**Note on the number of tested examples**: by default, **all** pipeline
+scripts in this archive (`05_run_shap_llm_pipeline.py`,
+`06_run_catboost_shap_llm_pipeline.py`, `scripts/casinolimit/run_*.py`,
+`scripts/lstm/run_lstm_pipeline_*.py`) test **5 examples per technique**,
+deliberately limited this way to avoid multiplying LLM calls (Agent 1 +
+Agent 2, one round trip per example). To change this number:
+- `05_run_shap_llm_pipeline.py`, `06_run_catboost_shap_llm_pipeline.py`,
+  `scripts/lstm/run_lstm_pipeline_zeek.py`: `--n-per-technique` option
+  (or `--n-attacks` for the `run_lstm_pipeline_casinolimit*.py` scripts)
+  on the command line.
+- `scripts/casinolimit/run_realmlp_pipeline.py`,
+  `run_catboost_pipeline.py` and their `_adversarial.py` variants: no
+  CLI argument — directly replace the `N_PER_TECHNIQUE = 5` constant at
+  the top of each of these files with the desired number.
+
+**Original raw data not included (Zeek and CasinoLimit)**: due to their
+size (several gigabytes before sorting/enrichment), the **original raw
+data** is not provided for either dataset in this archive.
+
+**Expected variability in Agent 2 scores (Top-1/Top-5)**: the exact
+values obtained when re-running a script may differ slightly from those
+reported in the paper. Two normal causes for this: (1) the LLM agents do
+not behave in a perfectly deterministic way across runs (same prompt,
+same model), and (2) the test events sampled by default (5 per
+technique) are not necessarily exactly the same ones used to produce the
+figures in the paper. These variations remain minor and do not affect
+the paper's qualitative conclusions (degradation under permuted/constant
+fake SHAP, gaps between Baseline and Behavioral, etc.), which are
+consistently reproduced regardless of the sample or the run.

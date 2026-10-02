@@ -1,0 +1,45 @@
+# ==============================================================================
+# Données volumineuses — régénérables via scripts/, non versionnées dans git
+# ==============================================================================
+data/raw/*.csv
+data/processed/*.csv
+mitre/*.json
+results/*.json
+!results/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!mitre/.gitkeep
+
+# ==============================================================================
+# Environnement Python
+# ==============================================================================
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# ==============================================================================
+# Jupyter
+# ==============================================================================
+.ipynb_checkpoints/
+
+# ==============================================================================
+# Éditeurs / OS
+# ==============================================================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ==============================================================================
+# Secrets / config locale
+# ==============================================================================
+.env
+*.env.local
+
+# NOTE : les modèles .joblib dans models/ SONT versionnés volontairement
+# (poids < 1 Mo, nécessaires pour rejouer SHAP/agents sans ré-entraîner).
+.venv/
