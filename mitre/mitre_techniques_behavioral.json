@@ -1,0 +1,513 @@
+[
+  {
+    "technique_id": "T1595",
+    "name": "Active Scanning",
+    "mitre_description": "Adversaries may execute active reconnaissance scans to gather information that can be used during targeting. Active scans are those where the adversary probes victim infrastructure via network traffic, as opposed to other forms of reconnaissance that do not involve direct interaction.",
+    "behavioral_description": "A source actively probes external or internal network infrastructure through direct network traffic exchanges, rather than passively gathering information. This pattern is consistent with reconnaissance aimed at mapping victim infrastructure ahead of further targeting.",
+    "url": "https://attack.mitre.org/techniques/T1595"
+  },
+  {
+    "technique_id": "T1125",
+    "name": "Video Capture",
+    "mitre_description": "Adversaries may leverage a computer's peripheral devices (e.g., integrated cameras or webcams) or applications (e.g., video call services) to capture video recordings for the purpose of gathering information. Images may also be captured from devices or applications, potentially in specified intervals, in lieu of video files.",
+    "behavioral_description": "This technique involves local capture of video or image data from a compromised host's camera or video application, rather than a distinctive network communication pattern. Any network activity associated with this technique would typically appear only when captured content is later exfiltrated, and would resemble generic data transfer or exfiltration traffic rather than a signature specific to video capture itself.",
+    "url": "https://attack.mitre.org/techniques/T1125"
+  },
+  {
+    "technique_id": "T1595.001",
+    "name": "Scanning IP Blocks",
+    "mitre_description": "Adversaries may scan victim IP blocks to gather information that can be used during targeting. Public IP addresses may be allocated to organizations by block, or a range of sequential addresses.",
+    "behavioral_description": "A source systematically sends probes across a contiguous or sequential range of IP addresses rather than targeting a single host. This pattern is consistent with an attempt to enumerate an entire address block to identify reachable systems.",
+    "url": "https://attack.mitre.org/techniques/T1595/001"
+  },
+  {
+    "technique_id": "T1595.002",
+    "name": "Vulnerability Scanning",
+    "mitre_description": "Adversaries may scan victims for vulnerabilities that can be used during targeting. Vulnerability scans typically check if the configuration of a target host/application (ex: software and version) potentially aligns with the target of a specific exploit the adversary may seek to use.",
+    "behavioral_description": "A source sends probes to a target host or application designed to reveal its software, version, or configuration details. This pattern is consistent with checking whether the target's configuration matches a known exploitable weakness.",
+    "url": "https://attack.mitre.org/techniques/T1595/002"
+  },
+  {
+    "technique_id": "T1583",
+    "name": "Acquire Infrastructure",
+    "mitre_description": "Adversaries may buy, lease, rent, or obtain infrastructure that can be used during targeting. A wide variety of infrastructure exists for hosting and orchestrating adversary operations. Infrastructure solutions include physical or cloud servers, domains, and third-party web services. Some infrastructure providers offer free trial periods, enabling infrastructure acquisition at limited to no cost. Additionally, botnets are available for rent or purchase.",
+    "behavioral_description": "This activity occurs off the monitored network, prior to intrusion, and involves acquiring external hosting, domains, or third-party infrastructure. It is generally not observable in flow-level telemetry, but later traffic may originate from the newly acquired infrastructure.",
+    "url": "https://attack.mitre.org/techniques/T1583"
+  },
+  {
+    "technique_id": "T1588",
+    "name": "Obtain Capabilities",
+    "mitre_description": "Adversaries may buy and/or steal capabilities that can be used during targeting. Rather than developing their own capabilities in-house, adversaries may purchase, freely download, or steal them. Activities may include the acquisition of malware, software (including licenses), exploits, certificates, and information relating to vulnerabilities. Adversaries may obtain capabilities to support their operations throughout numerous phases of the adversary lifecycle.",
+    "behavioral_description": "This activity occurs off the monitored network, prior to intrusion, and involves acquiring or building tools, exploits, or malicious code. It is not directly observable in flow-level telemetry but may explain the sudden appearance of new toolsets in later stages.",
+    "url": "https://attack.mitre.org/techniques/T1588"
+  },
+  {
+    "technique_id": "T1190",
+    "name": "Exploit Public-Facing Application",
+    "mitre_description": "Adversaries may attempt to exploit a weakness in an Internet-facing host or system to initially access a network. The weakness in the system can be a software bug, a temporary glitch, or a misconfiguration.",
+    "behavioral_description": "A source sends a small number of unusual or malformed requests to an internet-facing service, differing from typical client interaction patterns for that service. This pattern is consistent with an attempt to trigger a software weakness or misconfiguration to gain initial access.",
+    "url": "https://attack.mitre.org/techniques/T1190"
+  },
+  {
+    "technique_id": "T1078",
+    "name": "Valid Accounts",
+    "mitre_description": "Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Compromised credentials may be used to bypass access controls placed on various resources on systems within the network and may even be used for persistent access to remote systems and externally available services, such as VPNs, Outlook Web Access, network devices, and remote desktop. Compromised credentials may also grant an adversary increased privilege to specific systems or access to restricted areas of the network. Adversaries may choose not to use malware or tools in conjunction with the legitimate access those credentials provide to make it harder to detect their presence.",
+    "behavioral_description": "A source repeatedly accesses the same remote service from a stable source-destination pair, with recurring successful-looking network interactions and no evidence of repeated failed access attempts. The behavior is consistent with persistent or repeated use of an existing access path to a resource, although network-flow data alone cannot directly confirm credential use.",
+    "url": "https://attack.mitre.org/techniques/T1078"
+  },
+  {
+    "technique_id": "T1078.001",
+    "name": "Default Accounts",
+    "mitre_description": "Adversaries may obtain and abuse credentials of a default account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Default accounts are those that are built-into an OS, such as the Guest or Administrator accounts on Windows systems. Default accounts also include default factory/provider set accounts on other types of systems, software, or devices, including the root user account in AWS, the root user account in ESXi, and the default service account in Kubernetes.",
+    "behavioral_description": "A source authenticates using a commonly known factory-default credential pair rather than a unique, organization-issued one. This pattern is consistent with exploitation of an unchanged default account to gain access.",
+    "url": "https://attack.mitre.org/techniques/T1078/001"
+  },
+  {
+    "technique_id": "T1078.003",
+    "name": "Local Accounts",
+    "mitre_description": "Adversaries may obtain and abuse credentials of a local account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Local accounts are those configured by an organization for use by users, remote support, services, or for administration on a single system or service.",
+    "behavioral_description": "A source authenticates to a single host using a credential scoped only to that machine, rather than a domain-wide account. This pattern is consistent with use of a local machine account to gain or maintain access.",
+    "url": "https://attack.mitre.org/techniques/T1078/003"
+  },
+  {
+    "technique_id": "T1059",
+    "name": "Command and Scripting Interpreter",
+    "mitre_description": "Adversaries may abuse command and script interpreters to execute commands, scripts, or binaries. These interfaces and languages provide ways of interacting with computer systems and are a common feature across many different platforms. Most systems come with some built-in command-line interface and scripting capabilities, for example, macOS and Linux distributions include some flavor of Unix Shell while Windows installations include the Windows Command Shell and PowerShell.",
+    "behavioral_description": "A host process invokes a shell or scripting interpreter to execute a sequence of commands, rather than acting through its normal application interface. This pattern is consistent with using a built-in interpreter to run arbitrary commands.",
+    "url": "https://attack.mitre.org/techniques/T1059"
+  },
+  {
+    "technique_id": "T1059.004",
+    "name": "Unix Shell",
+    "mitre_description": "Adversaries may abuse Unix shell commands and scripts for execution. Unix shells are the primary command prompt on Linux, macOS, and ESXi systems, though many variations of the Unix shell exist (e.g. sh, ash, bash, zsh, etc.) depending on the specific OS or distribution. Unix shells can control every aspect of a system, with certain commands requiring elevated privileges.",
+    "behavioral_description": "A host process spawns a Unix shell (sh, bash, zsh, etc.) and issues a sequence of commands. This pattern is consistent with using the native command interpreter to control the system.",
+    "url": "https://attack.mitre.org/techniques/T1059/004"
+  },
+  {
+    "technique_id": "T1059.006",
+    "name": "Python",
+    "mitre_description": "Adversaries may abuse Python commands and scripts for execution. Python is a very popular scripting/programming language, with capabilities to perform many functions. Python can be executed interactively from the command-line (via the <code>python.exe</code> interpreter) or via scripts (.py) that can be written and distributed to different systems. Python code can also be compiled into binary executables.",
+    "behavioral_description": "A host process launches a Python interpreter or executes a Python script outside of normal application usage. This pattern is consistent with using a scripting language to run custom logic.",
+    "url": "https://attack.mitre.org/techniques/T1059/006"
+  },
+  {
+    "technique_id": "T1203",
+    "name": "Exploitation for Client Execution",
+    "mitre_description": "Adversaries may exploit software vulnerabilities in client applications to execute code. Vulnerabilities can exist in software due to unsecure coding practices that can lead to unanticipated behavior. Adversaries can take advantage of certain vulnerabilities through targeted exploitation for the purpose of arbitrary code execution. Oftentimes the most valuable exploits to an offensive toolkit are those that can be used to obtain code execution on a remote system because they can be used to gain access to that system. Users will expect to see files related to the applications they commonly used to do work, so they are a useful target for exploit research and development because of their high utility.",
+    "behavioral_description": "A client application processes a file or input that triggers unexpected behavior, immediately followed by unplanned process or network activity. This pattern is consistent with a software vulnerability being triggered to achieve code execution.",
+    "url": "https://attack.mitre.org/techniques/T1203"
+  },
+  {
+    "technique_id": "T1053",
+    "name": "Scheduled Task/Job",
+    "mitre_description": "Adversaries may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code. Utilities exist within all major operating systems to schedule programs or scripts to be executed at a specified date and time. A task can also be scheduled on a remote system, provided the proper authentication is met (ex: RPC and file and printer sharing in Windows environments). Scheduling a task on a remote system typically may require being a member of an admin or otherwise privileged group on the remote system.",
+    "behavioral_description": "A new task or job is registered on a host to execute at a specified future time, rather than being run interactively. This pattern is consistent with establishing recurring or delayed execution of code.",
+    "url": "https://attack.mitre.org/techniques/T1053"
+  },
+  {
+    "technique_id": "T1053.003",
+    "name": "Cron",
+    "mitre_description": "Adversaries may abuse the <code>cron</code> utility to perform task scheduling for initial or recurring execution of malicious code. The <code>cron</code> utility is a time-based job scheduler for Unix-like operating systems. The <code> crontab</code> file contains the schedule of cron entries to be run and the specified times for execution. Any <code>crontab</code> files are stored in operating system-specific file paths.",
+    "behavioral_description": "A new entry is added to a Unix cron schedule to trigger execution at defined intervals. This pattern is consistent with using the native job scheduler to maintain recurring execution.",
+    "url": "https://attack.mitre.org/techniques/T1053/003"
+  },
+  {
+    "technique_id": "T1136",
+    "name": "Create Account",
+    "mitre_description": "Adversaries may create an account to maintain access to victim systems. With a sufficient level of access, creating such accounts may be used to establish secondary credentialed access that do not require persistent remote access tools to be deployed on the system.",
+    "behavioral_description": "A new user account is created on a host or within a domain outside of normal provisioning activity. This pattern is consistent with establishing an additional credentialed access point.",
+    "url": "https://attack.mitre.org/techniques/T1136"
+  },
+  {
+    "technique_id": "T1136.001",
+    "name": "Local Account Creation",
+    "mitre_description": "Adversaries may create a local account to maintain access to victim systems. Local accounts are those configured by an organization for use by users, remote support, services, or for administration on a single system or service.",
+    "behavioral_description": "A new account is created that is scoped only to a single local machine, rather than a domain-wide identity. This pattern is consistent with establishing a machine-local access point.",
+    "url": "https://attack.mitre.org/techniques/T1136/001"
+  },
+  {
+    "technique_id": "T1098",
+    "name": "Account Manipulation",
+    "mitre_description": "Adversaries may manipulate accounts to maintain and/or elevate access to victim systems. Account manipulation may consist of any action that preserves or modifies adversary access to a compromised account, such as modifying credentials or permission groups. These actions could also include account activity designed to subvert security policies, such as performing iterative password updates to bypass password duration policies and preserve the life of compromised credentials.",
+    "behavioral_description": "An existing account's credentials, permissions, or group membership are modified outside of normal administrative activity. This pattern is consistent with preserving or expanding access to an already-compromised account.",
+    "url": "https://attack.mitre.org/techniques/T1098"
+  },
+  {
+    "technique_id": "T1068",
+    "name": "Exploitation for Privilege Escalation",
+    "mitre_description": "Adversaries may exploit software vulnerabilities in an attempt to elevate privileges. Exploitation of a software vulnerability occurs when an adversary takes advantage of a programming error in a program, service, or within the operating system software or kernel itself to execute adversary-controlled code. Security constructs such as permission levels will often hinder access to information and use of certain techniques, so adversaries will likely need to perform privilege escalation to include use of software exploitation to circumvent those restrictions.",
+    "behavioral_description": "A process running with limited privileges is immediately followed by unexpected activity running with elevated privileges, without a normal authentication step in between. This pattern is consistent with a software flaw being used to gain higher-level permissions.",
+    "url": "https://attack.mitre.org/techniques/T1068"
+  },
+  {
+    "technique_id": "T1548",
+    "name": "Abuse Elevation Control Mechanism",
+    "mitre_description": "Adversaries may circumvent mechanisms designed to control privilege elevation to gain higher-level permissions. Most modern systems contain native elevation control mechanisms that are intended to limit privileges that a user can perform on a machine. Authorization has to be granted to specific users in order to perform tasks that can be considered of higher risk. An adversary can perform several methods to take advantage of built-in control mechanisms in order to escalate privileges on a system.",
+    "behavioral_description": "A process attempts to invoke a built-in privilege-elevation mechanism outside of normal, expected administrative usage. This pattern is consistent with circumventing controls designed to limit which users can perform higher-risk actions.",
+    "url": "https://attack.mitre.org/techniques/T1548"
+  },
+  {
+    "technique_id": "T1548.003",
+    "name": "Sudo and Sudo Caching",
+    "mitre_description": "Adversaries may perform sudo caching and/or use the sudoers file to elevate privileges. Adversaries may do this to execute commands as other users or spawn processes with higher privileges.",
+    "behavioral_description": "A process repeatedly or unusually invokes the sudo mechanism, or relies on a cached sudo authorization, to run commands as another user. This pattern is consistent with abusing elevation caching to execute privileged commands.",
+    "url": "https://attack.mitre.org/techniques/T1548/003"
+  },
+  {
+    "technique_id": "T1070",
+    "name": "Indicator Removal",
+    "mitre_description": "Adversaries may selectively delete or modify artifacts generated to reduce indications of their presence and blend in with legitimate activity. Rather than broadly removing evidence, adversaries may target specific artifacts that appear anomalous or are likely to draw scrutiny, while leaving sufficient data intact to maintain the appearance of normal system behavior.",
+    "behavioral_description": "Specific artifacts or records associated with a prior action are selectively deleted or altered, while the rest of the system's activity record remains intact. This pattern is consistent with removing evidence of a targeted action while avoiding broader suspicion.",
+    "url": "https://attack.mitre.org/techniques/T1070"
+  },
+  {
+    "technique_id": "T1070.004",
+    "name": "File Deletion",
+    "mitre_description": "Adversaries may delete files left behind by the actions of their intrusion activity. Malware, tools, or other non-native files dropped or created on a system by an adversary (ex: Ingress Tool Transfer) may leave traces to indicate to what was done within a network and how. Removal of these files can occur during an intrusion, or as part of a post-intrusion process to minimize the adversary's footprint.",
+    "behavioral_description": "Files that were previously written to a system by a non-native process are removed shortly after they were used. This pattern is consistent with cleaning up traces of tools or malware after use.",
+    "url": "https://attack.mitre.org/techniques/T1070/004"
+  },
+  {
+    "technique_id": "T1036",
+    "name": "Masquerading",
+    "mitre_description": "Adversaries may attempt to manipulate features of their artifacts to make them appear legitimate or benign to users and/or security tools. Masquerading occurs when the name or location of an object, legitimate or malicious, is manipulated or abused for the sake of evading defenses and observation. This may include manipulating file metadata, tricking users into misidentifying the file type, and giving legitimate task or service names.",
+    "behavioral_description": "A file or process presents a name, location, or metadata inconsistent with its actual origin or purpose, resembling a legitimate system component. This pattern is consistent with disguising malicious activity as benign to avoid scrutiny.",
+    "url": "https://attack.mitre.org/techniques/T1036"
+  },
+  {
+    "technique_id": "T1027",
+    "name": "Obfuscated Files or Information",
+    "mitre_description": "Adversaries may attempt to make an executable or file difficult to discover or analyze by encrypting, encoding, or otherwise obfuscating its contents on the system or in transit. This is common behavior that can be used across different platforms and the network to evade defenses.",
+    "behavioral_description": "A transferred or stored file's content is encoded, encrypted, or otherwise transformed such that its true content is not directly readable. This pattern is consistent with concealing a payload from inspection.",
+    "url": "https://attack.mitre.org/techniques/T1027"
+  },
+  {
+    "technique_id": "T1222",
+    "name": "File and Directory Permissions Modification",
+    "mitre_description": "Adversaries may modify file or directory permissions/attributes to evade access control lists (ACLs) and access protected files. File and directory permissions are commonly managed by ACLs configured by the file or directory owner, or users with the appropriate permissions. File and directory ACL implementations vary by platform, but generally explicitly designate which users or groups can perform which actions (read, write, execute, etc.).",
+    "behavioral_description": "The access permissions or attributes of a file or directory are changed outside of normal administrative activity. This pattern is consistent with bypassing access controls to reach otherwise protected files.",
+    "url": "https://attack.mitre.org/techniques/T1222"
+  },
+  {
+    "technique_id": "T1110",
+    "name": "Brute Force",
+    "mitre_description": "Adversaries may use brute force techniques to gain access to accounts when passwords are unknown or when password hashes are obtained. Without knowledge of the password for an account or set of accounts, an adversary may systematically guess the password using a repetitive or iterative mechanism. Brute forcing passwords can take place via interaction with a service that will check the validity of those credentials or offline against previously acquired credential data, such as password hashes.",
+    "behavioral_description": "A source submits many distinct credential guesses in quick succession against a single account or service. This pattern is consistent with systematically guessing an unknown password.",
+    "url": "https://attack.mitre.org/techniques/T1110"
+  },
+  {
+    "technique_id": "T1110.001",
+    "name": "Password Guessing",
+    "mitre_description": "Adversaries with no prior knowledge of legitimate credentials within the system or environment may guess passwords to attempt access to accounts. Without knowledge of the password for an account, an adversary may opt to systematically guess the password using a repetitive or iterative mechanism. An adversary may guess login credentials without prior knowledge of system or environment passwords during an operation by using a list of common passwords. Password guessing may or may not take into account the target's policies on password complexity or use policies that may lock accounts out after a number of failed attempts.",
+    "behavioral_description": "A source attempts a sequence of different candidate passwords against the same account without prior knowledge of the correct value. This pattern is consistent with iteratively guessing a password from a common list.",
+    "url": "https://attack.mitre.org/techniques/T1110/001"
+  },
+  {
+    "technique_id": "T1110.003",
+    "name": "Password Spraying",
+    "mitre_description": "Adversaries may use a single or small list of commonly used passwords against many different accounts to attempt to acquire valid account credentials. Password spraying uses one password (e.g. 'Password01'), or a small list of commonly used passwords, that may match the complexity policy of the domain. Logins are attempted with that password against many different accounts on a network to avoid account lockouts that would normally occur when brute forcing a single account with many passwords.",
+    "behavioral_description": "A source attempts the same one or few candidate passwords across many different accounts, rather than many passwords against one account. This pattern is consistent with avoiding lockouts while searching for any account with a weak, common password.",
+    "url": "https://attack.mitre.org/techniques/T1110/003"
+  },
+  {
+    "technique_id": "T1056",
+    "name": "Input Capture",
+    "mitre_description": "Adversaries may use methods of capturing user input to obtain credentials or collect information. During normal system usage, users often provide credentials to various different locations, such as login pages/portals or system dialog boxes. Input capture mechanisms may be transparent to the user (e.g. Credential API Hooking) or rely on deceiving the user into providing input into what they believe to be a genuine service (e.g. Web Portal Capture).",
+    "behavioral_description": "A process intercepts or logs user input, such as keystrokes or form submissions, outside of the application's normal handling of that input. This pattern is consistent with capturing credentials or sensitive data as the user enters them.",
+    "url": "https://attack.mitre.org/techniques/T1056"
+  },
+  {
+    "technique_id": "T1555",
+    "name": "Credentials from Password Stores",
+    "mitre_description": "Adversaries may search for common password storage locations to obtain user credentials. Passwords are stored in several places on a system, depending on the operating system or application holding the credentials. There are also specific applications and services that store passwords to make them easier for users to manage and maintain, such as password managers and cloud secrets vaults. Once credentials are obtained, they can be used to perform lateral movement and access restricted information.",
+    "behavioral_description": "A process accesses files or memory locations known to hold stored credentials, such as browser or password-manager data, outside of that application's own normal usage. This pattern is consistent with harvesting previously saved passwords.",
+    "url": "https://attack.mitre.org/techniques/T1555"
+  },
+  {
+    "technique_id": "T1003",
+    "name": "OS Credential Dumping",
+    "mitre_description": "Adversaries may attempt to dump credentials to obtain account login and credential material, normally in the form of a hash or a clear text password. Credentials can be obtained from OS caches, memory, or structures. Credentials can then be used to perform Lateral Movement and access restricted information.",
+    "behavioral_description": "A process reads memory or system structures known to hold cached authentication material, producing hashes or cleartext credentials as output. This pattern is consistent with extracting login material directly from the operating system.",
+    "url": "https://attack.mitre.org/techniques/T1003"
+  },
+  {
+    "technique_id": "T1046",
+    "name": "Network Service Discovery",
+    "mitre_description": "Adversaries may attempt to get a listing of services running on remote hosts and local network infrastructure devices, including those that may be vulnerable to remote software exploitation. Common methods to acquire this information include port, vulnerability, and/or wordlist scans using tools that are brought onto a system.",
+    "behavioral_description": "A single source repeatedly contacts multiple destination hosts across a broad range of ports in rapid succession, with minimal or no data exchanged per attempt. This pattern is consistent with systematically probing which network services are reachable and active, often as a precursor to identifying exploitable software.",
+    "url": "https://attack.mitre.org/techniques/T1046"
+  },
+  {
+    "technique_id": "T1082",
+    "name": "System Information Discovery",
+    "mitre_description": "An adversary may attempt to get detailed information about the operating system and hardware, including version, patches, hotfixes, service packs, and architecture. Adversaries may use this information to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions. This behavior is distinct from Local Storage Discovery which is an adversary's discovery of local drive, disks and/or volumes.",
+    "behavioral_description": "A process queries the local operating system for version, patch level, or hardware details rather than application-specific data. This pattern is consistent with profiling the host before deciding on further action.",
+    "url": "https://attack.mitre.org/techniques/T1082"
+  },
+  {
+    "technique_id": "T1083",
+    "name": "File and Directory Discovery",
+    "mitre_description": "Adversaries may enumerate files and directories or may search in specific locations of a host or network share for certain information within a file system. Adversaries may use the information from File and Directory Discovery during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.",
+    "behavioral_description": "A process enumerates files or folders across the file system or a network share, without opening or modifying most of them. This pattern is consistent with searching for information of interest prior to further action.",
+    "url": "https://attack.mitre.org/techniques/T1083"
+  },
+  {
+    "technique_id": "T1057",
+    "name": "Process Discovery",
+    "mitre_description": "Adversaries may attempt to get information about running processes on a system. Information obtained could be used to gain an understanding of common software/applications running on systems within the network. Administrator or otherwise elevated access may provide better process details. Adversaries may use the information from Process Discovery during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.",
+    "behavioral_description": "A process queries the list of currently running processes on a host rather than performing its normal function. This pattern is consistent with profiling installed software and running services before deciding on further action.",
+    "url": "https://attack.mitre.org/techniques/T1057"
+  },
+  {
+    "technique_id": "T1016",
+    "name": "System Network Configuration Discovery",
+    "mitre_description": "Adversaries may look for details about the network configuration and settings, such as IP and/or MAC addresses, of systems they access or through information discovery of remote systems. Several operating system administration utilities exist that can be used to gather this information. Examples include Arp, ipconfig/ifconfig, nbtstat, and route.",
+    "behavioral_description": "A process queries a host's own network interface, MAC/IP addressing, or routing configuration rather than communicating externally. This pattern is consistent with mapping the local network context before further action.",
+    "url": "https://attack.mitre.org/techniques/T1016"
+  },
+  {
+    "technique_id": "T1049",
+    "name": "System Network Connections Discovery",
+    "mitre_description": "Adversaries may attempt to get a listing of network connections to or from the compromised system they are currently accessing or from remote systems by querying for information over the network.",
+    "behavioral_description": "A process queries the list of active or established network connections on a host, local or remote, rather than initiating new communication itself. This pattern is consistent with surveying existing connectivity for further targeting.",
+    "url": "https://attack.mitre.org/techniques/T1049"
+  },
+  {
+    "technique_id": "T1087",
+    "name": "Account Discovery",
+    "mitre_description": "Adversaries may attempt to get a listing of valid accounts, usernames, or email addresses on a system or within a compromised environment. This information can help adversaries determine which accounts exist, which can aid in follow-on behavior such as brute-forcing, spear-phishing attacks, or account takeovers (e.g., Valid Accounts).",
+    "behavioral_description": "A process queries a system or directory service for a list of usernames, accounts, or email addresses rather than authenticating against a specific one. This pattern is consistent with enumerating valid identities to target with follow-on actions.",
+    "url": "https://attack.mitre.org/techniques/T1087"
+  },
+  {
+    "technique_id": "T1087.001",
+    "name": "Local Account Discovery",
+    "mitre_description": "Adversaries may attempt to get a listing of local system accounts. This information can help adversaries determine which local accounts exist on a system to aid in follow-on behavior.",
+    "behavioral_description": "A process queries the local system's account list rather than a domain-wide directory. This pattern is consistent with enumerating identities scoped to a single host.",
+    "url": "https://attack.mitre.org/techniques/T1087/001"
+  },
+  {
+    "technique_id": "T1018",
+    "name": "Remote System Discovery",
+    "mitre_description": "Adversaries may attempt to get a listing of other systems by IP address, hostname, or other logical identifier on a network that may be used for Lateral Movement from the current system. Functionality could exist within remote access tools to enable this, but utilities available on the operating system could also be used such as Ping, <code>net view</code> using Net, or, on ESXi servers, `esxcli network diag ping`.",
+    "behavioral_description": "A single source contacts multiple distinct hosts by address or name across the network without maintaining a sustained session with any of them. This pattern is consistent with enumerating other reachable systems to identify targets for further movement.",
+    "url": "https://attack.mitre.org/techniques/T1018"
+  },
+  {
+    "technique_id": "T1069",
+    "name": "Permission Groups Discovery",
+    "mitre_description": "Adversaries may attempt to discover group and permission settings. This information can help adversaries determine which user accounts and groups are available, the membership of users in particular groups, and which users and groups have elevated permissions.",
+    "behavioral_description": "A process queries group membership or permission-level information rather than performing a task requiring those permissions. This pattern is consistent with mapping which accounts hold elevated access.",
+    "url": "https://attack.mitre.org/techniques/T1069"
+  },
+  {
+    "technique_id": "T1518",
+    "name": "Software Discovery",
+    "mitre_description": "Adversaries may attempt to get a listing of software and software versions that are installed on a system or in a cloud environment. Adversaries may use the information from Software Discovery during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.",
+    "behavioral_description": "A process queries the list of installed software and versions on a host or cloud environment. This pattern is consistent with profiling available applications before deciding on further action.",
+    "url": "https://attack.mitre.org/techniques/T1518"
+  },
+  {
+    "technique_id": "T1518.001",
+    "name": "Security Software Discovery",
+    "mitre_description": "Adversaries may attempt to get a listing of security software, configurations, defensive tools, and sensors that are installed on a system or in a cloud environment. This may include things such as cloud monitoring agents and anti-virus. Adversaries may use the information from Security Software Discovery during automated discovery to shape follow-on behaviors, including whether or not the adversary fully infects the target and/or attempts specific actions.",
+    "behavioral_description": "A process specifically queries for installed security tools, monitoring agents, or antivirus configuration rather than general software. This pattern is consistent with assessing what defensive controls are present before further action.",
+    "url": "https://attack.mitre.org/techniques/T1518/001"
+  },
+  {
+    "technique_id": "T1007",
+    "name": "System Service Discovery",
+    "mitre_description": "Adversaries may try to gather information about registered local system services. Adversaries may obtain information about services using tools as well as OS utility commands such as <code>sc query</code>, <code>tasklist /svc</code>, <code>systemctl --type=service</code>, and <code>net start</code>. Adversaries may also gather information about schedule tasks via commands such as `schtasks` on Windows or `crontab -l` on Linux and macOS.",
+    "behavioral_description": "A process queries the list of registered system services or scheduled tasks rather than interacting with a specific one. This pattern is consistent with profiling the host's running services before further action.",
+    "url": "https://attack.mitre.org/techniques/T1007"
+  },
+  {
+    "technique_id": "T1040",
+    "name": "Network Sniffing",
+    "mitre_description": "Adversaries may passively sniff network traffic to capture information about an environment, including authentication material passed over the network. Network sniffing refers to using the network interface on a system to monitor or capture information sent over a wired or wireless connection. An adversary may place a network interface into promiscuous mode to passively access data in transit over the network, or use span ports to capture a larger amount of data.",
+    "behavioral_description": "A host interface is placed into a mode that captures traffic not addressed to it, or receives traffic mirrored from other systems, without initiating connections of its own. This pattern is consistent with passively collecting data or credentials transiting the network.",
+    "url": "https://attack.mitre.org/techniques/T1040"
+  },
+  {
+    "technique_id": "T1124",
+    "name": "System Time Discovery",
+    "mitre_description": "An adversary may gather the system time and/or time zone settings from a local or remote system. The system time is set and stored by services, such as the Windows Time Service on Windows or <code>systemsetup</code> on macOS. These time settings may also be synchronized between systems and services in an enterprise network, typically accomplished with a network time server within a domain.",
+    "behavioral_description": "A process queries the system clock or time zone configuration from a local or remote host outside of normal scheduling functions. This pattern is consistent with gathering timing information to coordinate further action.",
+    "url": "https://attack.mitre.org/techniques/T1124"
+  },
+  {
+    "technique_id": "T1135",
+    "name": "Network Share Discovery",
+    "mitre_description": "Adversaries may look for folders and drives shared on remote systems as a means of identifying sources of information to gather as a precursor for Collection and to identify potential systems of interest for Lateral Movement. Networks often contain shared network drives and folders that enable users to access file directories on various systems across a network.",
+    "behavioral_description": "A source enumerates shared folders or drives exposed by other systems on the network rather than connecting to a single known share. This pattern is consistent with identifying accessible data sources or systems for further movement.",
+    "url": "https://attack.mitre.org/techniques/T1135"
+  },
+  {
+    "technique_id": "T1201",
+    "name": "Password Policy Discovery",
+    "mitre_description": "Adversaries may attempt to access detailed information about the password policy used within an enterprise network or cloud environment. Password policies are a way to enforce complex passwords that are difficult to guess or crack through Brute Force. This information may help the adversary to create a list of common passwords and launch dictionary and/or brute force attacks which adheres to the policy (e.g. if the minimum password length should be 8, then not trying passwords such as 'pass123'; not checking for more than 3-4 passwords per account if the lockout is set to 6 as to not lock out accounts).",
+    "behavioral_description": "A process queries the configured password complexity, length, or lockout policy of a domain or environment. This pattern is consistent with tailoring a future guessing attempt to avoid triggering lockouts.",
+    "url": "https://attack.mitre.org/techniques/T1201"
+  },
+  {
+    "technique_id": "T1482",
+    "name": "Domain Trust Discovery",
+    "mitre_description": "Adversaries may attempt to gather information on domain trust relationships that may be used to identify lateral movement opportunities in Windows multi-domain/forest environments. Domain trusts provide a mechanism for a domain to allow access to resources based on the authentication procedures of another domain. Domain trusts allow the users of the trusted domain to access resources in the trusting domain. The information discovered may help the adversary conduct SID-History Injection, Pass the Ticket, and Kerberoasting. Domain trusts can be enumerated using the `DSEnumerateDomainTrusts()` Win32 API call, .NET methods, and LDAP. The Windows utility Nltest is known to be used by adversaries to enumerate domain trusts.",
+    "behavioral_description": "A process queries relationships between authentication domains rather than resources within a single domain. This pattern is consistent with identifying paths for moving between trusted domains.",
+    "url": "https://attack.mitre.org/techniques/T1482"
+  },
+  {
+    "technique_id": "T1021",
+    "name": "Remote Services",
+    "mitre_description": "Adversaries may use Valid Accounts to log into a service that accepts remote connections, such as telnet, SSH, and VNC. The adversary may then perform actions as the logged-on user.",
+    "behavioral_description": "A source establishes an authenticated remote session to a host using a standard remote-access service, then performs actions under that session's identity, without exploiting a software flaw to gain entry. This pattern is consistent with using existing valid access to interact with additional systems.",
+    "url": "https://attack.mitre.org/techniques/T1021"
+  },
+  {
+    "technique_id": "T1021.004",
+    "name": "SSH",
+    "mitre_description": "Adversaries may use Valid Accounts to log into remote machines using Secure Shell (SSH). The adversary may then perform actions as the logged-on user.",
+    "behavioral_description": "A source establishes an authenticated SSH session to a remote host, then issues commands under that session. This pattern is consistent with using an existing account to access and operate on another machine.",
+    "url": "https://attack.mitre.org/techniques/T1021/004"
+  },
+  {
+    "technique_id": "T1210",
+    "name": "Exploitation of Remote Services",
+    "mitre_description": "Adversaries may exploit remote services to gain unauthorized access to internal systems once inside of a network. Exploitation of a software vulnerability occurs when an adversary takes advantage of a programming error in a program, service, or within the operating system software or kernel itself to execute adversary-controlled code. A common goal for post-compromise exploitation of remote services is for lateral movement to enable access to a remote system.",
+    "behavioral_description": "A source sends unusual or malformed input to a network-facing service already reachable from within the network, followed by unexpected process or session activity on the target. This pattern is consistent with exploiting a software flaw to gain unauthorized access to an internal system.",
+    "url": "https://attack.mitre.org/techniques/T1210"
+  },
+  {
+    "technique_id": "T1091",
+    "name": "Replication Through Removable Media",
+    "mitre_description": "Adversaries may move onto systems, possibly those on disconnected or air-gapped networks, by copying malware to removable media and taking advantage of Autorun features when the media is inserted into a system and executes. In the case of Lateral Movement, this may occur through modification of executable files stored on removable media or by copying malware and renaming it to look like a legitimate file to trick users into executing it on a separate system. In the case of Initial Access, this may occur through manual manipulation of the media, modification of systems used to initially format the media, or modification to the media's firmware itself.",
+    "behavioral_description": "A file is written to or executed from removable storage media, associated with an autorun-style trigger, rather than a normal download or transfer over the network. This pattern is consistent with spreading to other systems via physical media.",
+    "url": "https://attack.mitre.org/techniques/T1091"
+  },
+  {
+    "technique_id": "T1005",
+    "name": "Data from Local System",
+    "mitre_description": "Adversaries may search local system sources, such as file systems, configuration files, local databases, virtual machine files, or process memory, to find files of interest and sensitive data prior to Exfiltration.",
+    "behavioral_description": "A process reads files, configuration data, or memory contents from the local system that are unrelated to its normal function, without yet transmitting them elsewhere. This pattern is consistent with searching for sensitive local data prior to exfiltration.",
+    "url": "https://attack.mitre.org/techniques/T1005"
+  },
+  {
+    "technique_id": "T1074",
+    "name": "Data Staging",
+    "mitre_description": "Adversaries may stage collected data in a central location or directory prior to Exfiltration. Data may be kept in separate files or combined into one file through techniques such as Archive Collected Data. Interactive command shells may be used, and common functionality within cmd and bash may be used to copy data into a staging location.",
+    "behavioral_description": "Multiple files are copied or combined into a single location or archive shortly before an outbound transfer, rather than being accessed individually as needed. This pattern is consistent with consolidating collected data prior to exfiltration.",
+    "url": "https://attack.mitre.org/techniques/T1074"
+  },
+  {
+    "technique_id": "T1074.001",
+    "name": "Local Data Staging",
+    "mitre_description": "Adversaries may stage collected data in a central location or directory on the local system prior to Exfiltration. Data may be kept in separate files or combined into one file through techniques such as Archive Collected Data. Interactive command shells may be used, and common functionality within cmd and bash may be used to copy data into a staging location.",
+    "behavioral_description": "Files are copied or combined into a single local directory rather than being transmitted directly as they are collected. This pattern is consistent with local consolidation of data before it leaves the system.",
+    "url": "https://attack.mitre.org/techniques/T1074/001"
+  },
+  {
+    "technique_id": "T1114",
+    "name": "Email Collection",
+    "mitre_description": "Adversaries may target user email to collect sensitive information. Emails may contain sensitive data, including trade secrets or personal information, that can prove valuable to adversaries. Emails may also contain details of ongoing incident response operations, which may allow adversaries to adjust their techniques in order to maintain persistence or evade defenses. Adversaries can collect or forward email from mail servers or clients.",
+    "behavioral_description": "A process accesses or forwards mail server or mail client content outside of normal user email activity. This pattern is consistent with harvesting message content for its sensitive information.",
+    "url": "https://attack.mitre.org/techniques/T1114"
+  },
+  {
+    "technique_id": "T1071",
+    "name": "Application Layer Protocol",
+    "mitre_description": "Adversaries may communicate using OSI application layer protocols to avoid detection/network filtering by blending in with existing traffic. Commands to the remote system, and often the results of those commands, will be embedded within the protocol traffic between the client and server.",
+    "behavioral_description": "Outbound communication is embedded within a standard application-layer protocol's traffic, carrying commands or results alongside what otherwise resembles normal protocol usage. This pattern is consistent with blending command-and-control traffic into typical network activity.",
+    "url": "https://attack.mitre.org/techniques/T1071"
+  },
+  {
+    "technique_id": "T1071.001",
+    "name": "Web Protocols (HTTP/HTTPS)",
+    "mitre_description": "Adversaries may communicate using application layer protocols associated with web traffic to avoid detection/network filtering by blending in with existing traffic. Commands to the remote system, and often the results of those commands, will be embedded within the protocol traffic between the client and server.",
+    "behavioral_description": "Outbound communication uses standard web request/response traffic, carrying commands or their results within what otherwise resembles ordinary browsing or API activity. This pattern is consistent with hiding command-and-control traffic within common web protocols.",
+    "url": "https://attack.mitre.org/techniques/T1071/001"
+  },
+  {
+    "technique_id": "T1573",
+    "name": "Encrypted Channel",
+    "mitre_description": "Adversaries may employ an encryption algorithm to conceal command and control traffic rather than relying on any inherent protections provided by a communication protocol. Despite the use of a secure algorithm, these implementations may be vulnerable to reverse engineering if secret keys are encoded and/or generated within malware samples/configuration files.",
+    "behavioral_description": "Command-and-control traffic is wrapped in an additional layer of encryption beyond what the underlying protocol normally provides. This pattern is consistent with concealing the content of remote-control communications from inspection.",
+    "url": "https://attack.mitre.org/techniques/T1573"
+  },
+  {
+    "technique_id": "T1573.001",
+    "name": "Symmetric Cryptography",
+    "mitre_description": "Adversaries may employ a known symmetric encryption algorithm to conceal command and control traffic rather than relying on any inherent protections provided by a communication protocol. Symmetric encryption algorithms use the same key for plaintext encryption and ciphertext decryption. Common symmetric encryption algorithms include AES, DES, 3DES, Blowfish, and RC4.",
+    "behavioral_description": "Command-and-control traffic is encrypted using a shared-key algorithm rather than relying on the transport protocol's own protections. This pattern is consistent with concealing remote-control communications using a lightweight, symmetric cipher.",
+    "url": "https://attack.mitre.org/techniques/T1573/001"
+  },
+  {
+    "technique_id": "T1095",
+    "name": "Non-Application Layer Protocol",
+    "mitre_description": "Adversaries may use an OSI non-application layer protocol for communication between host and C2 server or among infected hosts within a network. The list of possible protocols is extensive. Specific examples include use of network layer protocols, such as the Internet Control Message Protocol (ICMP), transport layer protocols, such as the User Datagram Protocol (UDP), session layer protocols, such as Socket Secure (SOCKS), as well as redirected/tunneled protocols, such as Serial over LAN (SOL).",
+    "behavioral_description": "Communication between a host and a remote system occurs using a network- or transport-layer protocol (such as ICMP or raw UDP) rather than a typical application protocol. This pattern is consistent with using an unusual channel for remote control or data exchange to avoid detection.",
+    "url": "https://attack.mitre.org/techniques/T1095"
+  },
+  {
+    "technique_id": "T1571",
+    "name": "Non-Standard Port",
+    "mitre_description": "Adversaries may communicate using a protocol and port pairing that are typically not associated. For example, HTTPS over port 8088 or port 587 as opposed to the traditional port 443. Adversaries may make changes to the standard port used by a protocol to bypass filtering or muddle analysis/parsing of network data.",
+    "behavioral_description": "A recognizable protocol is observed running over a port number that is not its typical, expected assignment. This pattern is consistent with an attempt to bypass port-based filtering or complicate traffic analysis.",
+    "url": "https://attack.mitre.org/techniques/T1571"
+  },
+  {
+    "technique_id": "T1041",
+    "name": "Exfiltration Over C2 Channel",
+    "mitre_description": "Adversaries may steal data by exfiltrating it over an existing command and control channel. Stolen data is encoded into the normal communications channel using the same protocol as command and control communications.",
+    "behavioral_description": "Data is transmitted outbound to the same destination and channel already used for command-and-control communication, rather than a separate transfer path. This pattern is consistent with exfiltrating data through an existing remote-control connection.",
+    "url": "https://attack.mitre.org/techniques/T1041"
+  },
+  {
+    "technique_id": "T1020",
+    "name": "Automated Exfiltration",
+    "mitre_description": "Adversaries may exfiltrate data, such as sensitive documents, through the use of automated processing after being gathered during Collection.",
+    "behavioral_description": "Outbound data transfer occurs at a fixed, repeated interval or immediately following each collection step, without an apparent manual trigger. This pattern is consistent with a scripted process automatically sending out collected data.",
+    "url": "https://attack.mitre.org/techniques/T1020"
+  },
+  {
+    "technique_id": "T1048",
+    "name": "Exfiltration Over Alternative Protocol",
+    "mitre_description": "Adversaries may steal data by exfiltrating it over a different protocol than that of the existing command and control channel. The data may also be sent to an alternate network location from the main command and control server.",
+    "behavioral_description": "Data is transmitted outbound using a different protocol or destination than the one used for ongoing command-and-control communication. This pattern is consistent with separating the exfiltration channel from the control channel.",
+    "url": "https://attack.mitre.org/techniques/T1048"
+  },
+  {
+    "technique_id": "T1498",
+    "name": "Network Denial of Service",
+    "mitre_description": "Adversaries may perform Network Denial of Service (DoS) attacks to degrade or block the availability of targeted resources to users. Network DoS can be performed by exhausting the network bandwidth services rely on. Example resources include specific websites, email services, DNS, and web-based applications. Adversaries have been observed conducting network DoS attacks for political purposes and to support other malicious activities, including distraction, hacktivism, and extortion.",
+    "behavioral_description": "A target's network bandwidth is saturated by high-volume traffic from one or more sources, degrading availability for legitimate users rather than compromising the host itself. This pattern is consistent with a network-level flood intended to disrupt a service.",
+    "url": "https://attack.mitre.org/techniques/T1498"
+  },
+  {
+    "technique_id": "T1498.001",
+    "name": "Direct Network Flood",
+    "mitre_description": "Adversaries may attempt to cause a denial of service (DoS) by directly sending a high-volume of network traffic to a target. This DoS attack may also reduce the availability and functionality of the targeted system(s) and network. Direct Network Floods are when one or more systems are used to send a high-volume of network packets towards the targeted service's network. Almost any network protocol may be used for flooding. Stateless protocols such as UDP or ICMP are commonly used but stateful protocols such as TCP can be used as well.",
+    "behavioral_description": "One or more sources send a sustained, high-volume stream of network packets directly toward a single destination or service. This pattern is consistent with a straightforward volumetric flood intended to overwhelm network capacity.",
+    "url": "https://attack.mitre.org/techniques/T1498/001"
+  },
+  {
+    "technique_id": "T1499",
+    "name": "Endpoint Denial of Service",
+    "mitre_description": "Adversaries may perform Endpoint Denial of Service (DoS) attacks to degrade or block the availability of services to users. Endpoint DoS can be performed by exhausting the system resources those services are hosted on or exploiting the system to cause a persistent crash condition. Example services include websites, email services, DNS, and web-based applications. Adversaries have been observed conducting DoS attacks for political purposes and to support other malicious activities, including distraction, hacktivism, and extortion.",
+    "behavioral_description": "A target host's processing or memory resources become exhausted following a sustained pattern of resource-intensive requests, degrading or halting the hosted service rather than the network itself. This pattern is consistent with overloading a service to disrupt its availability.",
+    "url": "https://attack.mitre.org/techniques/T1499"
+  },
+  {
+    "technique_id": "T1499.001",
+    "name": "OS Exhaustion Flood",
+    "mitre_description": "Adversaries may launch a denial of service (DoS) attack targeting an endpoint's operating system (OS). A system's OS is responsible for managing the finite resources as well as preventing the entire system from being overwhelmed by excessive demands on its capacity. These attacks do not need to exhaust the actual resources on a system; the attacks may simply exhaust the limits and available resources that an OS self-imposes.",
+    "behavioral_description": "A target host receives requests specifically designed to exhaust operating-system-level limits (connections, handles, processes) rather than raw bandwidth. This pattern is consistent with exhausting OS-imposed resource ceilings to disrupt the host.",
+    "url": "https://attack.mitre.org/techniques/T1499/001"
+  },
+  {
+    "technique_id": "T1485",
+    "name": "Data Destruction",
+    "mitre_description": "Adversaries may destroy data and files on specific systems or in large numbers on a network to interrupt availability to systems, services, and network resources. Data destruction is likely to render stored data irrecoverable by forensic techniques through overwriting files or data on local and remote drives. Common operating system file deletion commands such as <code>del</code> and <code>rm</code> often only remove pointers to files without wiping the contents of the files themselves, making the files recoverable by proper forensic methodology. This behavior is distinct from Disk Content Wipe and Disk Structure Wipe because individual files are destroyed rather than sections of a storage disk or the disk's logical structure.",
+    "behavioral_description": "Files across a system or network are overwritten or removed at the content level in large numbers, rather than individually as part of normal use. This pattern is consistent with destructive action intended to render data unrecoverable and disrupt availability.",
+    "url": "https://attack.mitre.org/techniques/T1485"
+  }
+]
